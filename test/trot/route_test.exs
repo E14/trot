@@ -139,7 +139,7 @@ defmodule Trot.RouterTest do
   test "route returns a bad rpc call with a nested error message" do
     conn = call(Router, :get, "/badrpc/nested")
     assert conn.status == 500
-    assert conn.resp_body == ~S'{%Protocol.UndefinedError{description: nil, protocol: Enumerable, value: ""}}'
+    assert conn.resp_body == {%Protocol.UndefinedError{description: nil, protocol: Enumerable, value: ""}} |> inspect
   end
 
   test "route returns redirect" do

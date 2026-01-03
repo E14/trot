@@ -47,10 +47,10 @@ defmodule Trot.Router do
                                 pass: ["text/*"],
                                 json_decoder: Poison,
                                 body_reader: {Trot.CacheBodyReader, :read_body, []}],
-        "Elixir.PlugHeartbeat": [path: Application.get_env(:trot, :heartbeat, "/heartbeat")],
+        "Elixir.PlugHeartbeat": [path: Application.compile_env(:trot, :heartbeat, "/heartbeat")],
       ]
-      pre_routing = Application.get_env(:trot, :pre_routing, default_pre_routing)
-      post_routing = Application.get_env(:trot, :post_routing, [])
+      pre_routing = Application.compile_env(:trot, :pre_routing, default_pre_routing)
+      post_routing = Application.compile_env(:trot, :post_routing, [])
 
       @static_root Path.relative_to_cwd("priv/static")
       @path_root "/"
@@ -146,11 +146,11 @@ defmodule Trot.Router do
   def make_response(conn = %Plug.Conn{}, _conn), do: conn
   def make_response({:redirect, to}, conn), do: do_redirect(to, conn)
   def make_response({:badrpc, {:EXIT, {reason, _metadata}}}, conn) do
-    Logger.warn("Bad RPC error: #{inspect reason}")
+    Logger.warning("Bad RPC error: #{inspect reason}")
     make_response({:internal_server_error, inspect(reason)}, conn)
   end
   def make_response({:badrpc, reason}, conn) do
-    Logger.warn("Bad RPC error: #{inspect reason}")
+    Logger.warning("Bad RPC error: #{inspect reason}")
     make_response({:internal_server_error, inspect(reason)}, conn)
   end
   def make_response(body, conn) when is_binary(body), do: make_response({:ok, body}, conn)

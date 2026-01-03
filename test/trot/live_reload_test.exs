@@ -3,7 +3,9 @@ defmodule Trot.LiveReloadTest do
   import Trot.TestHelper
 
   setup do
-    Path.relative_to_cwd("lib/trot.ex") |> File.touch!()
+    tempfile = Path.relative_to_cwd("lib/tmp-test-#{:binary.encode_hex(:rand.bytes(16))}.ex")
+    :ok = File.touch!(tempfile)
+    on_exit(fn -> File.rm!(tempfile) end)
   end
 
   test "reloading maintains the requested URL" do
