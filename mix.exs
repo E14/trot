@@ -6,7 +6,7 @@ defmodule Trot.Mixfile do
   def project do
     [app: :trot,
      version: @version,
-     elixir: "~> 1.6",
+     elixir: "~> 1.12",
      deps: deps(),
      name: "Trot",
      docs: [main: "readme",
@@ -20,7 +20,9 @@ defmodule Trot.Mixfile do
   end
 
   def application do
-    [applications: [:logger, :plug, :cowboy, :plug_heartbeat, :slime],
+    [
+     # :crypto required by Plug.Crypto, :eex required by Calliope
+     extra_applications: [:logger, :crypto, :eex],
      mod: {Trot, []}]
   end
 
@@ -28,14 +30,13 @@ defmodule Trot.Mixfile do
     [
       {:plug_cowboy, "~> 2.0"},
       {:cowboy, "~> 2.5"},
-      {:poison, "~> 3.1"},
+      {:poison, "~> 6.0"},
       {:calliope, "~> 0.4.2"},
-      {:plug_heartbeat, "~> 0.2"},
-      {:earmark, "~> 1.2", only: :dev},
-      {:ex_doc, "~> 0.16", only: :dev, runtime: false},
+      {:plug_heartbeat, "~> 1.0"},
+      {:ex_doc, "~> 0.33", only: :dev, runtime: false},
       {:inch_ex, ">= 0.0.0", only: :docs},
-      {:credo, "~> 0.8", only: [:dev, :test]},
-      {:slime, "~> 1.1.0"},
+      {:credo, "~> 1.7.6", only: [:dev, :test], runtime: false},
+      {:slime, "~> 1.3"},
     ]
   end
 

@@ -23,16 +23,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Elixir
+      id: setup-beam
       uses: erlef/setup-beam@e6d7c94229049569db56a7ad5a540c051a010af9 # 
       with:
-        elixir-version: 'latest' # [Required] Define the Elixir version
-        otp-version: 'latest'    # [Required] Define the Erlang/OTP version
+        elixir-version: '> 0' # [Required] Define the Elixir version
+        otp-version: '> 0'    # [Required] Define the Erlang/OTP version
     - name: Restore dependencies cache
-      uses: actions/cache@v3
+      uses: actions/cache@v5
       with:
         path: deps
-        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-mix-
+        key: ${{ runner.os }}-mix-${{ steps.setup-beam.outputs.elixir-version }}-${{ hashFiles('**/mix.lock') }}
     - name: Install dependencies
       run: mix deps.get
     - name: Run tests

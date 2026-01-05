@@ -43,10 +43,10 @@ defmodule Trot do
     |> Enum.reduce([], &decode_pair(&1, &2))
   end
 
-  defp decode_pair({key, nil}, acc) do
-    key = String.to_atom(key)
-    Keyword.put(acc, key, true)
-  end
+  # Handle empty assign
+  defp decode_pair({key, nil}, acc), do: Keyword.put(acc, String.to_atom(key), true)
+  # Decoder behavior changed in Elixir 1.11 - an empty assign now comes as an empty string instead of nil
+  defp decode_pair({key, ""}, acc), do: Keyword.put(acc, String.to_atom(key), true)
   defp decode_pair({key, value}, acc) do
     key = String.to_atom(key)
     case Poison.decode(value) do
